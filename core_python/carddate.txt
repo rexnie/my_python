@@ -1,0 +1,13 @@
+#carddate.txt
+previous balance
+25
+debits
+21.23
+541
+24
+credits
+-20
+-123.23
+finance charge/late fees
+3.3
+9

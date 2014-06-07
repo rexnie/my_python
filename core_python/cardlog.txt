@@ -1,0 +1,14 @@
+account log:
+ignored: could not convert string to float: #carddate.txt
+ignored: could not convert string to float: previous balance
+date ... processed
+ignored: could not convert string to float: debits
+date ... processed
+date ... processed
+date ... processed
+ignored: could not convert string to float: credits
+date ... processed
+date ... processed
+ignored: could not convert string to float: finance charge/late fees
+date ... processed
+date ... processed
