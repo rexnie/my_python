@@ -60,6 +60,47 @@ def displayNumType(num):
     else:
         print 'not a number'
 
+def displayNumType2(num):
+    print num,'is',
+    if type(num) == type(0):
+        print 'an integer'
+    elif type(num) == type(0L):
+        print 'a long'
+    elif type(num) == type(0.0):
+        print 'a float'
+    elif type(num) == type(0+0j):
+        print 'a complex number'
+    else:
+        print 'not a number at all'
+
+def displayNumType3(num):
+    print num,'is',
+    if type(num) == types.IntType:
+        print 'an integer'
+    elif type(num) == types.LongType:
+        print 'a long'
+    elif type(num) == types.FloatType:
+        print 'a float'
+    elif type(num) == types.ComplexType:
+        print 'a complex number'
+    else:
+        print 'not a number at all'
+
+def displayNumType4(num):
+    t = type(num)
+    print num,'is',
+    # the same as id(a) == id(b)
+    if t is types.IntType:
+        print 'an integer'
+    elif t is types.LongType:
+        print 'a long'
+    elif t is types.FloatType:
+        print 'a float'
+    elif t is types.ComplexType:
+        print 'a complex number'
+    else:
+        print 'not a number at all'
+
 def getScore(sco=60.0):
     level = "D"
     if sco >= 90 and sco <= 100:
@@ -106,6 +147,9 @@ if __name__ == "__main__":
     #readTextFile()
     #readTextFile2()
     #displayNumType(10L)
+    #displayNumType2(10L)
+    #displayNumType3(10L)
+    #displayNumType4(10L)
     #getScore(86.4)
     #isLeapYear(1900)
     randTest()
