@@ -66,7 +66,7 @@ def uniFile():
     bytes_out = str_out.encode(CODEC)
     print len(str_out),len(bytes_out)
     f = open(fn,"w")
-    f.write(bytes_out)    
+    f.write(bytes_out)
     f.close()
 
     f = open(fn,"r")
@@ -115,7 +115,7 @@ def stackUseList():
         if ch == 'q':
             break
         CMDs[ch]()
-""" END of Stack"""                      
+""" END of Stack"""
 
 """Queue"""
 queue = []
