@@ -68,7 +68,8 @@ db2 = {}
 
 def viewdb2():
     for key in db2.keys():
-        print "%-10s%-10s%-10d" %(key,db2[key][0],db2[key][1])
+        tt = time.localtime(db2[key][1])
+        print "%-10s%-10s%02d/%02d/%02d/ %02d:%02d:%02d" %(key,db2[key][0],tt.tm_year,tt.tm_mon,tt.tm_mday,tt.tm_hour,tt.tm_min,tt.tm_sec)
 
 def deleteuser():
     dname = raw_input("name you want to delete").strip().lower()
