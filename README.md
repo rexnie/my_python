@@ -24,3 +24,12 @@ ch2 use db:mySQL
             show tables;
             desc table_name;
             select * from table_name;
+
+ch3 admin interface, use sqlite3
+    1. sudo apt-get install sqlite3
+    2. vim setting.py
+        database, add app
+    3. startproject, startapp
+    4. vim models.py
+    5. python manage.py syncdb
+    6. vim urls.py
