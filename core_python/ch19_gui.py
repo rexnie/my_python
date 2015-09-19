@@ -5,6 +5,8 @@ from time import sleep
 from Tkinter import * 
 from functools import partial as pto
 from tkMessageBox import showinfo, showwarning, showerror
+import string
+import tkMessageBox
 
 class DirList(object):
     def __init__(self, initdir=None):
@@ -140,7 +142,144 @@ def roadSigns():
         eval(cmd)
     top.mainloop()
 
+class Dialog(Toplevel):
+    def __init__(self, parent, title=None):
+        Toplevel.__init__(self, parent)
+        self.transient(parent)
+        if title:
+            self.title(title)
+        self.parent = parent
+        self.result = None
+
+        body = Frame(self)
+        self.initial_focus = self.body(body)
+        body.pack(padx=5, pady=5)
+
+        self.buttonbox()
+        self.grab_set()
+        if not self.initial_focus:
+            self.initial_focus = self
+        #self.protocol("WM_DELETE_WINDOW", self.cancel)
+        self.geometry("+%d+%d" % (self.parent.winfo_rootx() + 50,
+                                  self.parent.winfo_rooty() + 50))
+        self.initial_focus.focus_set()
+        self.wait_window(self)
+
+    def body(self, master):
+        # create dialog body. return widget that should have
+        # initial focus. this method should be overridden
+        pass
+    def buttonbox(self):
+        # add standard button box. override if you don't want the
+        # standard buttons
+        box = Frame(self)
+        w = Button(box, text="OK", width=10, default=ACTIVE, command=self.ok)
+        w.pack(side=LEFT, padx=5, pady=5)
+        w = Button(box, text="Cancel", width=10, command=self.cancel)
+        w.pack(side=LEFT, padx=5, pady=5)
+        self.bind("<Return>", self.ok)
+        self.bind("<Escape>", self.cancel)
+        box.pack()
+
+    def ok(self, event=None):
+        if not self.validate():
+            self.initial_focus.focus_set()  # put focus back
+            return
+        self.withdraw()
+        self.update_idletasks()
+        self.apply()
+        self.cancel()
+    def cancel(self, event=None):
+        self.parent.focus_set()
+        self.destroy()
+    def validate(self):
+        # command hooks, override
+        return 1
+    def apply(self):
+        pass
+
+class MyDialog(Dialog):
+    def body(self, master):
+        Label(master, text="First:").grid(row=0, sticky=W)
+        Label(master, text="Second:").grid(row=1, sticky=W)
+        self.e1 = Entry(master)
+        self.e2 = Entry(master)
+        self.e1.grid(row=0, column=1)
+        self.e2.grid(row=1, column=1)
+        self.cb = Checkbutton(master, text="Hardcopy")
+        self.cb.grid(row=2, columnspan=2, sticky=W)
+        return self.e1  # initial focus
+    def apply(self):
+        print self.result
+    def validate(self):
+        try:
+            first = string.atoi(self.e1.get())
+            second = string.atoi(self.e2.get())
+            self.result=first,second
+            return 1
+        except ValueError, e:
+            tkMessageBox.showwarning("Bad input","Illegal values, please try again")
+            return 0
+
+def test_dialog():
+    root = Tk()
+    d = MyDialog(root, title='dialog')
+    root.mainloop()
+
+class MyMenu():
+    def __init__(self,master):
+        self.master=master
+        self.master.protocol("WM_DELETE_WINDOW", self.QuitFunc)
+
+        self.rootMenu=Menu(self.master)
+        self.master.config(menu=self.rootMenu)
+
+        self.fileMenu=Menu(self.rootMenu)
+        self.editMenu=Menu(self.rootMenu)
+        self.helpMenu=Menu(self.rootMenu)
+        self.rootMenu.add_cascade(label='File',menu=self.fileMenu)
+        self.rootMenu.add_cascade(label='Edit',menu=self.editMenu)
+        self.rootMenu.add_cascade(label='Help',menu=self.helpMenu)
+
+        newMenu=Menu(self.fileMenu)
+        self.fileMenu.add_cascade(label="New",menu=newMenu)
+
+        newMenu.add_command(label="pydev project",command=self.pyprojectFunc)
+        newMenu.add_command(label="project...",command=self.projectFunc)
+        newMenu.add_command(label="File",command=self.fileFunc)
+        self.fileMenu.add_command(label="Open file...",command=self.fileFunc)
+        self.fileMenu.add_separator()
+        self.fileMenu.add_command(label="Exit",command=self.QuitFunc)
+
+        # create toolbar
+        toolbar=Frame(self.master)
+        Button(toolbar,text='New',width=1,command=self.toolboxFunc).pack(side=LEFT, padx=2, pady=2)
+        Button(toolbar,text='Open',width=1,command=self.toolboxFunc).pack(side=LEFT, padx=2, pady=2)
+        Button(toolbar,text='Exit',width=1,command=self.QuitFunc).pack(side=LEFT, padx=2, pady=2)
+        toolbar.pack(side=TOP, fill=X)
+
+    def fileFunc(self):
+        print 'fileFunc'
+    def QuitFunc(self):
+        print 'QUIT'
+        self.master.destroy()
+    def pyprojectFunc(self):
+        print "pyprojectFunc"
+    def projectFunc(self):
+        print 'projectFunc'
+    def toolboxFunc(self):
+        print 'toolboxFunc'
+def test_menu():
+    root=Tk()
+    root.geometry('500x500')
+    m=MyMenu(root)
+    root.mainloop()
+
 if __name__ == '__main__':
     #lsdir()
 
-    roadSigns()
+    #roadSigns()
+
+    test_dialog()
+
+    #test_menu()
