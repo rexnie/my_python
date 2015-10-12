@@ -132,6 +132,17 @@ def userpw2():
             deleteuser()
 """ end of userpw2 """
 
+def dict_sorted():
+    week={'Sun':'w7','Mon':'w1','Tue':'w2','Wen':'w3','Thur':'w4','Fri':'w5','Sat':'w6',}
+    print week
+    print 'sort with key:'
+    for k in sorted(week):
+        print k,week[k]
+    print 'sort with value:'
+    for k,v in sorted(week.items(), key=lambda e:e[1],reverse=True):
+        print k,v
+
 if __name__ == "__main__":
     #userpw()
-    userpw2()
+    #userpw2()
+    dict_sorted()
