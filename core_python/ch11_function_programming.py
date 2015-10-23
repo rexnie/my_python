@@ -28,6 +28,7 @@ def easy_math():
 
 ################################
 def tsfunc(func):
+    print 'tsfunc is called'
     def wrappedFunc():
         print '[%s] %s() called' % (
           ctime(), func.__name__)
@@ -47,39 +48,47 @@ def demo_decorator():
 
 #################################
 def tsfunc_arg1(name):
+    print 'tsfunc_arg1 is called'
     def wrappedFunc(func):
-        print '[%s] %s() called,%s' % (
-          ctime(), func.__name__,name)
-        return func
+        print 'wrappedFunc is called'
+        def _func():
+            print '[%s] %s() called,%s' % (
+            ctime(), func.__name__,name)
+            func()
+        return _func
     return wrappedFunc
 
-#@tsfunc_arg1('arg1')
+@tsfunc_arg1('arg1')
 def foo_arg1():
     ''' foo_arg1=tsfunc_arg1(name)(foo_arg1)() '''
     print 'in foo_arg1'
 
 def demo_decorator_arg1():
-    for i in range(5):
+    for i in range(2):
         sleep(1)
-        #foo_arg1()
+        foo_arg1()
 
 
 
 ####################################
 def tsfunc_arg2(name):
+    print 'tsfunc_arg2 is called'
     def wrappedFunc(func):
-        print '[%s] %s() called,%s' % (
+        print 'wrappedFunc is called'
+        def _func(i):
+            print '[%s] %s() called,%s' % (
           ctime(), func.__name__,name)
-        return func
+            func(i)
+        return _func
     return wrappedFunc
 
-#@tsfunc_arg2('arg2')
+@tsfunc_arg2('arg2')
 def foo_arg2(i=0):
     ''' foo_arg2=(tsfunc_arg2(name))(foo_arg2)(i) '''
     print 'in foo_arg2, i=%d' % i
 
 def demo_decorator_arg2():
-    for i in range(3):
+    for i in range(2):
         sleep(1)
         foo_arg2(i)
 ####################################
@@ -87,5 +96,5 @@ def demo_decorator_arg2():
 if __name__ == '__main__':
     #easy_math()
     #demo_decorator()
-    #demo_decorator_arg1()
+    demo_decorator_arg1()
     #demo_decorator_arg2()
