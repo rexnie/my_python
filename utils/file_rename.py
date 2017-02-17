@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 import os
 import os.path
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import fnmatch
 import sys
+import shutil
 '''
 the utility for rename files
-usage: 
+usage:
+    ./file_rename.py [directory-under-which-to-rename]
+
     frename=FileRename(work_dir='directory-under-which-to-rename')
     frename.change_postfix(old_postfix='png',new_postfix='jpg') a.png --> a.jpg
 work_dir: support absolute/relative directory
@@ -17,10 +19,13 @@ frename.change_postfix(old_postfix='png',new_postfix='jpg') a.png --> a.jpg
 frename.add_postfix(self,new_postfix='txt') a --> a.txt
 frename.add_prefix(self,prefix='xx',before=True) a.txt --> test_a.txt/ a_test.txt
 frename.rename_number(self,prefix='xx') a.txt --> test_001.txt
+frename.replace_words(self,oldWord='xx',newWorld='yy'):   abcxxdef.txt --> abcyydef.txt
 
 changelist:
 1. init version
 2. ignore the program itself, not to process file_rename.py
+3. add replace_words methold
+4. read argv[1] as directory-under-which-to-rename
 '''
 class FileRename(object):
     def __init__(self,work_dir='.'):
@@ -41,13 +46,14 @@ class FileRename(object):
         temp_dir=os.path.join(work_dir,'temp')
         #print work_dir,temp_dir
         if os.path.exists(temp_dir):
-            print '%s exist' % temp_dir
-            return False
-        else:
-            os.mkdir(temp_dir)
-            self.work_dir=work_dir
-            self.temp_dir=temp_dir
-            return True
+            print '%s exist, remove it.' % temp_dir
+            shutil.rmtree(temp_dir)
+
+        os.mkdir(temp_dir)
+        self.work_dir=work_dir
+        self.temp_dir=temp_dir
+        return True
+
     def check_inited(self):
         if not self.inited:
             print 'not inited,quit'
@@ -112,9 +118,24 @@ class FileRename(object):
                 cnt+=1
         self.file_process_cnt=cnt
         print '%s files renamed' % cnt
+
+    def replace_words(self,oldWord='xx',newWorld='yy'):
+        self.check_inited()
+        work_dir=self.work_dir
+        cnt=self.file_process_cnt=0
+        for fn in os.listdir(work_dir):
+            if os.path.isfile(os.path.join(work_dir,fn)) and not self.is_myself(fn) and \
+              fnmatch.fnmatchcase(fn,'*'+oldWord+'*'):
+                file_new = fn.replace(oldWord,newWorld)
+                print fn,file_new
+                os.rename(os.path.join(work_dir,fn),os.path.join(self.temp_dir,file_new))
+                cnt+=1
+        self.file_process_cnt=cnt
+        print '%s files renamed' % cnt
     
 if __name__ == '__main__':
-    #work_dir='/home/niedaocai/workspace/python/pythonDemo/src/files_rename'
-    #work_dir='files_rename'
-    fr=FileRename('.')
-    fr.add_prefix(prefix='gk',before=False)
+    work_dir='.'
+    if len(sys.argv) == 2:
+        work_dir=sys.argv[1]
+    fr=FileRename(work_dir)
+    fr.replace_words(oldWord='aazenclock3',newWorld="aazenclock2")
