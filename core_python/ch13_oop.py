@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8
 import os
 
 class AddrBookEntry(object):
@@ -59,6 +60,35 @@ class HotelRoomCalc(object):
         daily = round((self.roomRate*(1 + self.roomTax + self.salesTax)), 2)
         return float(days) * daily
 
+class RoundFloat(float):
+    """具有四舍五入功能的float类型"""
+    def __new__(cls, val): # 类方法,在object申明为staticmethod
+        print type(cls)
+        #return float.__new__(cls, round(val, 2))
+        return super(RoundFloat, cls).__new__(cls, round(val, 2))
+
+    def __init__(self, val):
+        print 'init, val=', val
+
+class SortedKeyDict(dict):
+    """实现按key排序的字典类型"""
+    def keys(self):
+        print 'call keys()'
+        return sorted(super(SortedKeyDict, self).keys())
+
+    def __iter__(self):
+        print 'call __iter__()'
+        return super(SortedKeyDict, self).__iter__()
+
+def test_sorted_key_dict():
+    d = SortedKeyDict((('zheng-cai', 67), ('hui-jun', 68), ('xin-yi', 2)))
+
+    print 'by iterator:'.ljust(12), [key for key in d]
+    print 'by keys():'.ljust(12), d.keys()
+
 
 if __name__ == "__main__":
-    TestAddrBookEntry()
+    #TestAddrBookEntry()
+
+    #print RoundFloat(1.5955)
+    test_sorted_key_dict()
