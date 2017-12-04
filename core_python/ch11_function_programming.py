@@ -3,30 +3,34 @@ from operator import add, sub
 from random import randint, choice
 from time import sleep, ctime
 
-def easy_math():
-    '''pass list parameter to function'''
-    ops = { '+':add, '-':sub }
-    MAXTRIES = 2
-    op = choice('+-')
-    nums = [randint(1,10) for i in range(2)]
-    nums.sort(reverse=True)
-    ans=ops[op](*nums)
-    pr='%d%s%d=' % (nums[0],op,nums[1])
+MAX_TRIES = 2
 
+
+def easy_math():
+    """pass list parameter to function"""
+    ops = {'+': add, '-': sub}
+
+    op = choice('+-')
+    nums = [randint(1, 10) for i in range(2)]
+    nums.sort(reverse=True)
+    ans = ops[op](*nums)
+    pr = '%d%s%d=' % (nums[0], op, nums[1])
+
+    i = 0
     while True:
         try:
             if int(raw_input(pr)) == ans:
                 print 'correct'
                 break
-            if i == MAXTRIES:
-                print 'answer is:\n%s %d\n' % pr,ans
+            if i == MAX_TRIES:
+                print 'answer is:\n%s%d\n' % (pr, ans)
             else:
                 print 'incorrect...try again'
                 i += 1
-        except (KeyboardInterrupt,EOFError,ValueError), e:
-            print 'invalid input, try again'
+        except (KeyboardInterrupt, EOFError, ValueError), e:
+            print 'invalid input, try again:', e
 
-################################
+
 def tsfunc(func):
     print 'tsfunc is called'
     def wrappedFunc():
@@ -94,7 +98,7 @@ def demo_decorator_arg2():
 ####################################
 
 if __name__ == '__main__':
-    #easy_math()
+    easy_math()
     #demo_decorator()
-    demo_decorator_arg1()
+    # demo_decorator_arg1()
     #demo_decorator_arg2()
